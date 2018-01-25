@@ -99,6 +99,21 @@ Other goals for today:
 * log into the UNIX server
 
 
+To log into the pbio381 server, I use ssh. Like this:
+
+I used the Putty program and entered the following commands:
+
+```
+ip0af52955:~ srkeller$ ssh srkeller@pbio381.uvm.edu
+srkeller@pbio381.uvm.edu's password: 
+Last login: Wed Jan 24 13:13:54 2018 from ip0af52955.int.uvm.edu
+[srkeller@pbio381 ~]$
+```
+
+
+
+
+
 ------
 <div id='id-section2'/>
 ### Page 2: 2018-01-29 
