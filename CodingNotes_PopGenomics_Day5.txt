@@ -1,0 +1,59 @@
+Procedure for 3/19/18:
+
+I. Finish running ADMIXTURE
+	1. Convert vcf to geno format:
+		A. Make sure you have a thinned and filtered vcf file in ~/myresults/out.recode.vcf
+		B. Make sure the following files are in ~/myscripts (if you need them, get from /data/scripts/
+			i. beetle.pop
+				-contains ind IDs and pop designations; 2 col's; no header
+			ii. beetle.spid
+				-make sure filenames match "beetle" not "beetles"
+				-make sure no paths; just filenames
+			iii. vcf2geno.sh
+				-open and check; make sure all paths and filenames are correct
+		C. Make sure vcf2geno.sh is executable; chmod if needed
+		D. Run vcf2geno.sh for file conversion
+	2. Write bash script to run ADMIXTURE:
+		A. Open previous script ADMIX.sh (mine is in ~myscripts/)
+		B. Make it look exactly like this:
+			#!/bin/bash
+			for K in {1..10}
+			do
+			admixture -j4 --cv=10 ~/myresults/out.recode.vcf.geno $K | tee log${K}.out
+			done
+			grep "CV" log*out >chooseK.txt
+		C. Check to make sure executable, then run ADMIX.sh
+		D. cd to ~/myresults and cat chooseK.txt; infer evidence for optimal K value
+		E. Download *.Q files (for K=2-5) to local drive and boot R to plot
+		F. While we're at it, also download your vcf file to local drive for running PCA
+
+II. Plot Q-values in R using Pophelper: (avail on tutorials under Day4)
+
+install.packages(c("Cairo","ggplot2","gridExtra","gtable","tidyr","devtools"),dependencies=T)
+devtools::install_github('royfrancis/pophelper')
+
+library(pophelper)
+
+setwd("/Users/srkeller/github/PBIO381_srkeller_labnotebook_2018/myresults/")
+
+admixfiles=list.files(path=("ADMIXTURE/"),full.names=T)
+admixlist=readQ(files=admixfiles,filetype="basic")
+
+# metadata: sample id and pop from beetle.pop file
+metadata=read.table("beetle.pop",header=F)
+
+# format metadata to a data frame and ind variables as chars. for plotting
+metadata2=data.frame(sampleid=metadata[,1], population=metadata[,2])
+
+metadata2$sampleid=as.character(metadata2$sampleid)
+metadata2$population=as.character(metadata2$population)
+
+# add in the sample id to the different Q files for plotting
+if(length(unique(sapply(admixlist,nrow)))==1)
+  admixlist <- lapply(admixlist,"rownames<-",metadata2$sampleid)
+
+head(admixlist[[3]])
+
+
+		
+		
