@@ -3,7 +3,8 @@ Procedure for 3/19/18:
 I. Finish running ADMIXTURE
 	1. Convert vcf to geno format:
 		A. Make sure you have a thinned and filtered vcf file in ~/myresults/out.recode.vcf
-		B. Make sure the following files are in ~/myscripts (if you need them, get from /data/scripts/
+		B. Make sure the following files are in ~/myscripts (if you need them, get from 
+		/data/scripts/
 			i. beetle.pop
 				-contains ind IDs and pop designations; 2 col's; no header
 			ii. beetle.spid
@@ -29,7 +30,8 @@ I. Finish running ADMIXTURE
 
 II. Plot Q-values in R using Pophelper: (avail on tutorials under Day4)
 
-install.packages(c("Cairo","ggplot2","gridExtra","gtable","tidyr","devtools"),dependencies=T)
+install.packages(c("Cairo","ggplot2","gridExtra","gtable","tidyr","devtools"),
+	dependencies=T)
 devtools::install_github('royfrancis/pophelper')
 
 library(pophelper)
@@ -53,6 +55,20 @@ if(length(unique(sapply(admixlist,nrow)))==1)
   admixlist <- lapply(admixlist,"rownames<-",metadata2$sampleid)
 
 head(admixlist[[3]])
+
+
+p <- plotQ(admixlist[c(1,2,3,4)],
+           returnplot=T,exportplot=T,quiet=T,basesize=11, imgoutput="join", 
+           showyaxis=T, showticks=T, panelspacer=0.4, useindlab=F, showindlab=F, 
+           grplab=metadata2[2], grplabsize=4, linesize=1, barsize=1, pointsize=3, 
+           panelratio=c(4,1), divsize = 0.75, pointcol="white", showtitle=T, 
+           titlelab="ADMIXTURE analysis on O. tauri, SNPs thinned to 1 per kb", 
+           splab=c("K=2","K=3","K=4","K=5"), outputfilename="ADMIXTURE_Otauri",
+           imgtype="pdf",height=3,width=25)
+
+plot(p$plot[[1]])
+
+III. Run PCA on the SNP genotypes, and look at correspondence with ADMIXTIRE analysis
 
 
 		
